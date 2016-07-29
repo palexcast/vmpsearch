@@ -1,0 +1,15 @@
+// Base
+@import 'base/colors';
+@import 'base/fonts';
+
+// Helpers
+@import 'helpers/functions';
+@import 'helpers/mixins';
+@import 'helpers/variables';
+@import 'layout/home/home';
+
+// Bootstrap - uncomment needed parts
+@import '../lib/bootstrap-sass/bootstrap-custom';
+
+// FontAwesome
+@import '../lib/font-awesome/font-awesome-custom';

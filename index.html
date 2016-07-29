@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html ng-app="fjellkam">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+  <title ng-bind="pageTitle">Fjell-Kameraterne</title>
+  <style>
+    .skip-menu {
+      background: #FFF;
+      font-size: 1.5em;
+      height: 0px;
+      left: 45%;
+      overflow: hidden;
+      position: absolute;
+      -webkit-transform: translateY(40px);
+      -ms-transform: translateY(40px);
+      -o-transform: translateY(40px);
+      transform: translateY(40px);
+      width: 0px;
+      will-change: opacity;
+      /* To appear on top of the menu */
+      z-index: 16;
+    }
+
+    .skip-menu:link,
+    .skip-menu:visited {
+      color: #187A48;
+    }
+
+    .skip-menu:focus {
+      -webkit-animation: fadeInDown 0.3s ease-out;
+      -o-animation: fadeInDown 0.3s ease-out;
+      animation: fadeInDown 0.3s ease-out;
+      height: auto;
+      outline-color: #187A48;
+      overflow: auto;
+      padding: 10px 15px;
+      width: auto;
+    }
+
+    @keyframes fadeInDown {
+      0% {
+        opacity: 0;
+        -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+        -o-transform: translateY(0);
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 1;
+        -webkit-transform: translateY(40px);
+        -ms-transform: translateY(40px);
+        -o-transform: translateY(40px);
+        transform: translateY(40px);
+      }
+    }
+    /* mega menu list: http://terrillthompson.com/tests/menus/accessible-mega-menu */
+
+    .navigation {
+      background-color: #187A48;
+      color: #FFF;
+      display: block;
+      list-style: none;
+      margin-top: 30px;
+      position: relative;
+      text-align: right;
+      z-index: 15;
+    }
+
+    .navigation::after {
+      content: none!important;
+    }
+    /* a top level navigation item in the mega menu */
+
+    .nav-item {
+      display: inline-block;
+      list-style: none;
+      margin: 0;
+    }
+    /* first descendant link within a top level navigation item */
+
+    .nav-item> a {
+      border: 1px solid transparent;
+      display: inline-block;
+      position: relative;
+    }
+
+    .nav-item>a,
+    .hamburger-icon {
+      padding: 1em;
+    }
+
+    .logo-container {
+      left: 4em;
+      position: absolute;
+      top: -1.5em;
+    }
+
+    .logo {
+      display: block!important;
+      width: 140px;
+    }
+
+    .nav-item a:link,
+    .nav-item a:visited {
+      color: #FFF;
+    }
+    /* focus/open states of first descendant link within a top level
+         navigation item */
+
+    .nav-item> a:focus,
+    .nav-item:hover> a:link,
+    .nav-item:hover> a:visited,
+    .nav-item:hover> a:hover {
+      background-color: #FFF;
+      border: 1px solid #dedede;
+      color: #187A48;
+      outline: 0;
+      text-decoration: none;
+    }
+    /* open state of first descendant link within a top level
+         navigation item */
+
+    .nav-item> .open {
+      border-bottom: none;
+      z-index: 1;
+    }
+
+    .nav-item svg {
+      fill: currentColor;
+      height: 15px;
+      margin-right: 10px;
+      vertical-align: text-top;
+      width: 15px;
+    }
+    /* sub-navigation panel */
+
+    .sub-nav {
+      background-color: #187A48;
+      border: 1px solid #dedede;
+      border-top: 0;
+      display: none;
+      margin-top: 0;
+      position: absolute;
+      text-align: left;
+    }
+    /* sub-navigation panel open state */
+
+    .sub-nav.open {
+      display: block;
+    }
+    /* list of items within sub-navigation panel */
+
+    .sub-nav ul {
+      display: inline-block;
+      padding: 0;
+      vertical-align: top;
+    }
+    /* list item within sub-navigation panel */
+
+    .sub-nav li {
+      display: block;
+      list-style-type: none;
+      margin: 0;
+    }
+
+    .sub-nav a {
+      display: block;
+      padding: 0.5em 2.5em 0.5em 1.5em;
+    }
+
+    .sub-nav li:hover a:link,
+    .sub-nav li:hover a:visited,
+    .sub-nav li:hover a:hover,
+    .sub-nav li a:focus {
+      background-color: #FFF;
+      color: #187A48;
+      outline: 0;
+      text-decoration: underline;
+    }
+
+    .navigation__open-hamburger-button {
+      background-color: transparent;
+      border: 0;
+      display: none!important;
+    }
+    /* Tablet (landscape) and smaller */
+
+    @media only screen and (max-width: 1100px),
+    only screen and (max-device-width: 1100px) {
+      .navigation {
+        font-size: 1.2em;
+      }
+      .navigation__open-hamburger-button {
+        display: inline-block!important;
+      }
+      .nav-menu {
+        display: none;
+      }
+    }
+    /* Tablet (portrait) and smaller */
+
+    @media only screen and (max-width: 767px),
+    only screen and (max-device-width: 1100px) {
+      .navigation {
+        margin-top: 20px;
+      }
+      .logo-container {
+        left: 1em;
+        top: -0.8em;
+      }
+      .logo {
+        width: 100px;
+      }
+    }
+
+    .header__menu-toggle {
+      background: none;
+      border: none;
+      color: #FFF;
+      height: 24px;
+      margin: 0;
+      padding: 0;
+      width: 24px;
+    }
+
+    .side-nav {
+      left: 0;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      visibility: hidden;
+      width: 100%;
+    }
+
+    .side-nav--visible {
+      pointer-events: auto;
+      visibility: visible;
+    }
+
+    .side-nav::before {
+      background: rgba(0, 0, 0, 0.4);
+      content: '';
+      display: block;
+      height: 100%;
+      left: 0;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      transition: opacity 0.3s cubic-bezier(0, 0, 0.3, 1);
+      width: 100%;
+      will-change: opacity;
+    }
+
+    .side-nav__container {
+      background: #FFF;
+      box-shadow: 2px 0 12px rgba(0, 0, 0, 0.4);
+      height: 100%;
+      max-width: 400px;
+      position: relative;
+      transform: translateX(-102%);
+      width: 90%;
+      will-change: transform;
+    }
+
+    .side-nav--animatable .side-nav__container {
+      transition: transform 0.13s cubic-bezier(0, 0, 0.3, 1);
+    }
+
+    .side-nav--visible.side-nav--animatable .side-nav__container {
+      transition: transform 0.33s cubic-bezier(0, 0, 0.3, 1);
+    }
+
+    .side-nav--visible::before {
+      opacity: 1;
+    }
+
+    .side-nav--visible .side-nav__container {
+      transform: none;
+    }
+
+    .side-nav__hide {
+      background: none;
+      border: none;
+      color: #FFF;
+      height: 24px;
+      left: 16px;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      top: 16px;
+      width: 24px;
+    }
+
+    .side-nav__header {
+      background: #187A48;
+      color: #FFF;
+      font-size: 24px;
+      /* 100% - side-nav__content's height = 30% */
+      height: 30%;
+      padding: 16px;
+    }
+
+    .side-nav__content {
+      background: #EEE;
+      color: #333;
+      /* 100% - side-nav__header's height = 70% */
+      height: 70%;
+      list-style: none;
+      margin: 0;
+      -webkit-overflow-scrolling: touch;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 32px 0 0;
+      text-align: left;
+    }
+
+    .side-nav__content li {
+      line-height: 48px;
+    }
+
+    .side-nav__parent {
+      overflow: hidden;
+    }
+
+    .side-nav__parent--open {
+      background: #DDD;
+      max-height: 500px;
+      -webkit-transition: all 0.33s cubic-bezier(0, 0, 0.3, 1);
+      -o-transition: all 0.33s cubic-bezier(0, 0, 0.3, 1);
+      transition: all 0.33s cubic-bezier(0, 0, 0.3, 1);
+    }
+
+    .side-nav__parent--open>button:after {
+      content: "\25B4";
+    }
+
+    .side-nav__parent--collapsed {
+      max-height: 48px;
+      -webkit-transition: all 0.33s cubic-bezier(0, 0, 0.3, 1);
+      -o-transition: all 0.33s cubic-bezier(0, 0, 0.3, 1);
+      transition: all 0.33s cubic-bezier(0, 0, 0.3, 1);
+    }
+
+    .side-nav__parent--collapsed>button:after {
+      content: "\25BE";
+    }
+
+    .side-nav__parent>button,
+    .side-nav__no-children>a:link,
+    .side-nav__no-children>a:visited,
+    .side-nav__no-children>a:hover {
+      background: inherit;
+      border: 0;
+      display: block;
+      padding: 0 16px;
+      text-align: left;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .side-nav__no-children>a {}
+
+    .side-nav__parent ul {
+      padding-left: 0;
+    }
+
+    .side-nav__parent--open .side-nav__child {
+      visibility: visible;
+    }
+
+    .side-nav__child {
+      font-size: 0.85em;
+      list-style-type: none;
+      max-height: 48px;
+      visibility: hidden;
+    }
+
+    .side-nav__child>a {
+      display: block;
+      padding: 0 32px;
+    }
+
+  </style>
+
+  <link rel="stylesheet"
+    href="static/dist/fjellkam.min.css"
+    type="text/css" />
+</head>
+
+<body>
+  <a href="#content"
+    class="skip-menu capital-first"
+    translate="SKIP_MENU">Hopp over meny</a>
+
+  <div class="container-fluid navigation">
+    <div class="logo-container">
+      <a href="/">
+        <img class="logo"
+          src="static/images/fjellkamlogo_140px.gif"
+          alt="Fjell-Kameraternes logo" />
+      </a>
+    </div>
+    <button class="js-menu-show navigation__open-hamburger-button">
+      <i class="fa fa-bars hamburger-icon"
+        aria-hidden="true"></i>
+    </button>
+    <nav id="dawgdrops">
+      <ul class="nav-menu">
+
+        <!-- Home -->
+        <li class="nav-item">
+          <a href="/">
+            <svg class="nav-icon"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 27.02 27.02"
+              style="enable-background: new 0 0 27.02 27.02;"
+              xml:space="preserve">
+              <g>
+                <path d="M3.674,24.876c0,0-0.024,0.604,0.566,0.604c0.734,0,6.811-0.008,6.811-0.008l0.01-5.581c0,0-0.096-0.92,0.797-0.92h2.826c1.056,0,0.991,0.92,0.991,0.92l-0.012,5.563c0,0,5.762,0,6.667,0 c0.749,0,0.715-0.752,0.715-0.752V14.413l-9.396-8.358l-9.975,8.358C3.674,14.413,3.674,24.876,3.674,24.876z"
+                />
+                <path d="M0,13.635c0,0,0.847,1.561,2.694,0l11.038-9.338l10.349,9.28c2.138,1.542,2.939,0,2.939,0 L13.732,1.54L0,13.635z" />
+                <polygon points="23.83,4.275 21.168,4.275 21.179,7.503 23.83,9.752 	" />
+              </g>
+            </svg>
+            <span translate="navigation.HOME"
+              class="capital-first">Hjem</span>
+          </a>
+        </li>
+
+
+        <!-- Table-tennis -->
+        <li class="nav-item">
+          <a href="#">
+            <svg class="nav-icon"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              width="296.805px"
+              height="296.805px"
+              viewBox="0 0 296.805 296.805"
+              style="enable-background: new 0 0 296.805 296.805;"
+              xml:space="preserve">
+              <g>
+                <g>
+                  <path d="M275.765,133.105c0-32.738-12.742-63.525-35.896-86.676c-23.161-23.155-53.93-35.903-86.686-35.903 c-32.744,0-63.519,12.748-86.683,35.903C26.565,86.373,19.303,147.217,47.495,195.006L3.906,238.57 C1.408,241.075,0,244.468,0,247.998c0,3.524,1.408,6.93,3.906,9.422l24.944,24.95c2.609,2.6,6.02,3.902,9.428,3.902 c3.419,0,6.818-1.303,9.427-3.902l 43.583-43.577c18.747,11.03,39.986,16.813,62.048,16.813h0.012 c32.675,0,63.407-12.73,86.508-35.837C262.998,196.627,275.765,165.847,275.765,133.105z M80.077,212.3l-41.799,41.793 l-6.08-6.089l41.788-41.787c4.629-4.618,5.221-11.919,1.402-17.228c-9.199-12.778-14.784-27.076-17.026-41.697l80.581,80.572 c-14.997-2.246-29.189-7.986-41.64-16.951C91.987,207.075,84.695,207.664,80.077,212.3z"
+                  />
+                  <path d="M266.253,225.18c-16.85,0-30.553,13.709-30.553,30.553c0,16.843,13.703,30.546,30.553,30.546 c16.837,0,30.552-13.703,30.552-30.546C296.805,238.877,283.09,225.18,266.253,225.18z" />
+                </g>
+              </g>
+            </svg>
+            <span translate="navigation.TABLE_TENNIS"
+              class="capital-first">Bordtennis</span>
+          </a>
+          <div class="sub-nav">
+            <ul class="sub-nav-group">
+              <li>
+                <a href="/bordtennis/info">
+                  <span class="capital-first"
+                    translate="navigation.INFORMATION">Informasjon</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="TABLE_TENNIS">bordtennis</span>
+                </a>
+              </li>
+              <li>
+                <a href="/bordtennis">
+                  <span class="capital-first"
+                    translate="navigation.NEWS">Nyheter</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="TABLE_TENNIS">bordtennis</span>
+                </a>
+              </li>
+              <li>
+                <a href="/bordtennis/treningstider">
+                  <span class="capital-first"
+                    translate="navigation.TRANING_HOURS">Treningstider</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="TABLE_TENNIS">bordtennis</span>
+                </a>
+              </li>
+              <li>
+                <a href="/bordtennis/kalender">
+                  <span class="capital-first"
+                    translate="navigation.CALENDAR">Kalender</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="TABLE_TENNIS">bordtennis</span>
+                </a>
+              </li>
+              <li>
+                <a href="/bordtennis/styret">
+                  <span class="capital-first"
+                    translate="navigation.COUNCIL">Styret</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="TABLE_TENNIS">bordtennis</span>
+                </a>
+              </li>
+              <li>
+                <a href="/bordtennis/historie"><span class="capital-first" translate="navigation.HISTORY">Historie</span><span class="sr-only">,</span> <span class="sr-only" translate="TABLE_TENNIS">bordtennis</span>
+              </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+
+        <!-- Bandy -->
+        <li class="nav-item">
+          <a href="#">
+            <svg class="nav-icon"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 44.069 44.069"
+              style="enable-background: new 0 0 44.069 44.069;"
+              xml:space="preserve">
+              <g>
+                <g>
+                  <g>
+                    <path d="M32.17,0L17.811,37.604c0,0-0.873,2.736-2.442,2.244c-1.312-0.643-1.366-1.301-1.771-3.539 c-0.693-1.233-3.203-1.334-3.777,0.969c0.811,9.744,9.264,6.863,10.257,4.367c0.508-1.478,14.17-41.161,14.17-41.161L32.17,0z" />
+                    <path d="M12.642,30.641c1.562,0,2.826-1.265,2.826-2.824c0-1.563-1.265-2.825-2.826-2.825 c-1.557-0.001-2.822,1.263-2.822,2.823C9.82,29.376,11.085,30.641,12.642,30.641z" />
+                  </g>
+                </g>
+              </g>
+            </svg>
+            <span translate="navigation.BANDY"
+              class="capital-first">Innebandy</span>
+          </a>
+          <div class="sub-nav">
+            <ul class="sub-nav-group">
+              <li>
+                <a href="/innebandy/info">
+                  <span class="capital-first"
+                    translate="navigation.INFORMATION">Informasjon</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="BANDY">innebandy</span>
+                </a>
+              </li>
+              <li>
+                <a href="/innebandy">
+                  <span class="capital-first"
+                    translate="navigation.NEWS">Nyheter</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="BANDY">innebandy</span>
+                </a>
+              </li>
+              <li>
+                <a href="/innebandy/treningstider">
+                  <span class="capital-first"
+                    translate="navigation.TRANING_HOURS">Treningstider</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="BANDY">innebandy</span>
+                </a>
+              </li>
+              <li>
+                <a href="/innebandy/kalender">
+                  <span class="capital-first"
+                    translate="navigation.CALENDAR">Kalender</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="BANDY">innebandy</span>
+                </a>
+              </li>
+              <li>
+                <a href="/innebandy/styret">
+                  <span class="capital-first"
+                    translate="navigation.COUNCIL">Styret</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="BANDY">innebandy</span>
+                </a>
+              </li>
+              <li>
+                <a href="/innebandy/historie"><span class="capital-first" translate="navigation.HISTORY">Historie</span><span class="sr-only">,</span> <span class="sr-only" translate="BANDY">innebandy</span>
+              </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+
+        <!-- Football -->
+        <li class="nav-item">
+          <a href="#">
+            <svg class="nav-icon"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              width="496.013px"
+              height="496.013px"
+              viewBox="0 0 496.013 496.013"
+              style="enable-background: new 0 0 496.013 496.013;"
+              xml:space="preserve">
+              <g>
+                <g>
+                  <polygon points="271.942,209.614 338.425,114.466 257.523,39.026 144.542,79.657 148.303,186.135 		" />
+                  <polygon points="228.868,402.407 289.71,465.777 395.984,420.409 413.34,326.511 307.844,313.522 		" />
+                  <path d="M15.731,336.798l1.343,1.644c36.151,92.23,125.889,157.571,230.934,157.571c136.976,0,248.006-111.029,248.006-248.007 C496.013,111.036,384.983,0,248.007,0C111.036,0,0,111.043,0,248.006c0,30.668,5.604,60.026,15.785,87.145L15.731,336.798z M12.93,248.006c0-31.32,6.209-61.204,17.38-88.564l58.667-72.789l15.206-24.383c39.792-30.883,89.68-49.339,143.833-49.339 c1.302,0,2.583,0.08,3.893,0.094l26.236,9.664l57.827,7.379c37.029,15.002,69.417,39.15,94.312,69.671l-9.63,41.932 l37.994,107.148l24.272,6.148c-3.727,126.418-107.619,228.106-234.905,228.106c-63.375,0-120.926-25.247-163.249-66.159  l45.626-39.192L86.849,265.485l-68.128-23.465l-1.575,50.047C14.42,277.797,12.93,263.077,12.93,248.006z"
+                  />
+                </g>
+              </g>
+            </svg>
+            <span translate="navigation.FOOTBALL"
+              class="capital-first">Fotball</span>
+          </a>
+          <div class="sub-nav">
+            <ul class="sub-nav-group">
+              <li>
+                <a href="/fotball/info">
+                  <span class="capital-first"
+                    translate="navigation.INFORMATION">Informasjon</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="FOOTBALL">fotball</span>
+                </a>
+              </li>
+              <li>
+                <a href="/fotball">
+                  <span class="capital-first"
+                    translate="navigation.NEWS">Nyheter</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="FOOTBALL">fotball</span>
+                </a>
+              </li>
+              <li>
+                <a href="/fotball/treningstider">
+                  <span class="capital-first"
+                    translate="navigation.TRANING_HOURS">Treningstider</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="FOOTBALL">fotball</span>
+                </a>
+              </li>
+              <li>
+                <a href="/fotball/kalender">
+                  <span class="capital-first"
+                    translate="navigation.CALENDAR">Kalender</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="FOOTBALL">fotball</span>
+                </a>
+              </li>
+              <li>
+                <a href="/fotball/styret">
+                  <span class="capital-first"
+                    translate="navigation.COUNCIL">Styret</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="FOOTBALL">fotball</span>
+                </a>
+              </li>
+              <li>
+                <a href="/fotball/historie"><span class="capital-first" translate="navigation.HISTORY">Historie</span><span class="sr-only">,</span> <span class="sr-only" translate="FOOTBALL">fotball</span>
+              </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+
+        <!-- Senior -->
+        <li class="nav-item">
+          <a href="#">
+            <svg class="nav-icon"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 54.891 54.891"
+              style="enable-background: new 0 0 54.891 54.891;"
+              xml:space="preserve">
+              <g>
+                <g>
+                  <path d="M43.154,22.18c0.708,0.449-0.322-0.485-0.517-0.742c-0.688-0.907-1.332-1.843-1.979-2.777c-0.763-1.103-1.513-2.216-2.25-3.336c-0.953-1.447-2.896-1.627-4.446-2.019c-2.146-0.542-4.306-1.022-6.494-1.344 c-3.826-1.362-8.872,2.807-6.229,7.326c0.097,0.166,0.191,0.334,0.287,0.5c-2.013,2.567-5.042,3.522-8.818,3.127 c-2.318-0.243-2.87,2.424-1.697,3.889v27.648h1.697v-26.74c4.584,0.479,8.441-0.841,11.271-3.586 c1.152,2.093,2.275,4.201,3.369,6.325c-2.994,2.064-5.609,4.564-7.9,7.443c-0.787,0.988-0.784,2.014-0.346,2.84 c-0.017,0.291,0.011,0.605,0.096,0.941c0.882,3.487,1.763,6.975,2.645,10.463c0.937,3.719,6.819,2.658,5.875-1.08 c-0.882-3.488-1.763-6.977-2.645-10.465c-0.01-0.041-0.023-0.078-0.035-0.119c1.878-2.205,4.059-4.15,6.52-5.684 c0.297,5.813,0.594,11.985,0.893,17.364c0.214,3.845,6.182,3.545,5.967-0.312c-0.408-7.403-0.818-16.301-1.229-23.703 c-0.037-0.675-0.254-1.219-0.58-1.641c-0.098-0.328-0.228-0.66-0.398-0.995c-1.162-2.263-2.359-4.51-3.592-6.739 c0.518,0.138,1.033,0.279,1.547,0.42c1.688,2.739,3.557,6.238,6.135,7.875C43.39,29.023,46.224,24.128,43.154,22.18z"
+                  />
+                  <path d="M24.226,3.156c-0.771-2.43-3.5-3.733-6.093-2.909C15.54,1.072,14.064,3.71,14.836,6.14 L24.226,3.156z" />
+                  <path d="M12.676,9.289L27.809,4.48c0.226-0.072,0.375-0.241,0.333-0.378L24.701,3.6l-9.788,3.111 l-2.727,2.461C12.23,9.31,12.449,9.361,12.676,9.289z" />
+                  <path d="M22.006,12.042c2.552-0.811,3.961-3.538,3.149-6.089l-9.237,2.942 C16.729,11.445,19.457,12.856,22.006,12.042z" />
+                </g>
+              </g>
+            </svg>
+            <span translate="navigation.SENIOR"
+              class="capital-first">Eldres</span>
+          </a>
+          <div class="sub-nav">
+            <ul class="sub-nav-group">
+              <li>
+                <a href="/eldres/info">
+                  <span class="capital-first"
+                    translate="navigation.INFORMATION">Informasjon</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="SENIOR">eldres</span>
+                </a>
+              </li>
+              <li>
+                <a href="/eldres">
+                  <span class="capital-first"
+                    translate="navigation.NEWS">Nyheter</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="SENIOR">eldres</span>
+                </a>
+              </li>
+              <li>
+                <a href="/eldres/treningstider">
+                  <span class="capital-first"
+                    translate="navigation.TRANING_HOURS">Treningstider</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="SENIOR">eldres</span>
+                </a>
+              </li>
+              <li>
+                <a href="/eldres/kalender">
+                  <span class="capital-first"
+                    translate="navigation.CALENDAR">Kalender</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="SENIOR">eldres</span>
+                </a>
+              </li>
+              <li>
+                <a href="/eldres/styret">
+                  <span class="capital-first"
+                    translate="navigation.COUNCIL">Styret</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="SENIOR">eldres</span>
+                </a>
+              </li>
+              <li>
+                <a href="/eldres/historie"><span class="capital-first" translate="navigation.HISTORY">Historie</span><span class="sr-only">,</span> <span class="sr-only" translate="SENIOR">eldres</span>
+              </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+
+        <!-- Cabins -->
+        <li class="nav-item">
+          <a href="#">
+            <svg class="nav-icon"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              width="31.769px"
+              height="31.77px"
+              viewBox="0 0 31.769 31.77"
+              style="enable-background: new 0 0 31.769 31.77;"
+              xml:space="preserve">
+              <g>
+                <g>
+                  <path d="M7.458,12.07L0,26.15h2.263l6.079-11.478l6.083,11.478h2.262h0.002L9.226,12.069C8.878,11.415,7.806,11.416,7.458,12.07z" />
+                  <path d="M21.171,6.151c-0.174-0.327-0.514-0.532-0.885-0.532c-0.369,0-0.709,0.205-0.883,0.532l-6.09,11.495l1.131,2.135 l5.844-11.026l9.217,17.396h2.264L21.171,6.151z" />
+                  <rect x="18.06"
+                    y="24.41"
+                    width="1.74"
+                    height="1.74" />
+                  <rect x="18.06"
+                    y="21.67"
+                    width="1.74"
+                    height="1.74" />
+                  <rect x="20.8"
+                    y="21.67"
+                    width="1.74"
+                    height="1.74" />
+                  <rect x="20.8"
+                    y="24.41"
+                    width="1.74"
+                    height="1.74" />
+                  <rect x="6.105"
+                    y="24.41"
+                    width="1.74"
+                    height="1.74" />
+                  <rect x="6.105"
+                    y="21.67"
+                    width="1.74"
+                    height="1.74" />
+                  <rect x="8.845"
+                    y="21.67"
+                    width="1.74"
+                    height="1.74" />
+                  <rect x="8.845"
+                    y="24.41"
+                    width="1.74"
+                    height="1.74" />
+                </g>
+              </g>
+            </svg>
+            <span translate="navigation.CABINS"
+              class="capital-first">Hytter</span>
+          </a>
+          <div class="sub-nav">
+            <ul class="sub-nav-group">
+              <li>
+                <a href="/hytter/fjelltun">
+                  <span class="capital-first"
+                    translate="navigation.FJELLTUN_CABIN">Fjelltun-hytten</span>
+                </a>
+              </li>
+              <li>
+                <a href="/hytter/byfjellet">
+                  <span class="capital-first"
+                    translate="navigation.BYFJELLET_CABIN">Byfjellet-hytten</span>
+                </a>
+              </li>
+              <li>
+                <a href="/hytter/booking">
+                  <span class="capital-first"
+                    translate="navigation.BOOK_CABINS">Lei hytter</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+
+        <!-- About -->
+        <li class="nav-item">
+          <a href="#">
+            <svg class="nav-icon"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 23.625 23.625"
+              style="enable-background: new 0 0 23.625 23.625;"
+              xml:space="preserve">
+              <g>
+                <path d="M11.812,0C5.289,0,0,5.289,0,11.812s5.289,11.813,11.812,11.813s11.813-5.29,11.813-11.813 S18.335,0,11.812,0z M14.271,18.307c-0.608,0.24-1.092,0.422-1.455,0.548c-0.362,0.126-0.783,0.189-1.262,0.189 c-0.736,0-1.309-0.18-1.717-0.539s-0.611-0.814-0.611-1.367c0-0.215,0.015-0.435,0.045-0.659c0.031-0.224,0.08-0.476,0.147-0.759 l0.761-2.688c0.067-0.258,0.125-0.503,0.171-0.731c0.046-0.23,0.068-0.441,0.068-0.633c0-0.342-0.071-0.582-0.212-0.717 c-0.143-0.135-0.412-0.201-0.813-0.201c-0.196,0-0.398,0.029-0.605,0.09c-0.205,0.063-0.383,0.12-0.529,0.176l0.201-0.828 c0.498-0.203,0.975-0.377,1.43-0.521c0.455-0.146,0.885-0.218,1.29-0.218c0.731,0,1.295,0.178,1.692,0.53 c0.395,0.353,0.594,0.812,0.594,1.376c0,0.117-0.014,0.323-0.041,0.617c-0.027,0.295-0.078,0.564-0.152,0.811l-0.757,2.68 c-0.062,0.215-0.117,0.461-0.167,0.736c-0.049,0.275-0.073,0.485-0.073,0.626c0,0.356,0.079,0.599,0.239,0.728 c0.158,0.129,0.435,0.194,0.827,0.194c0.185,0,0.392-0.033,0.626-0.097c0.232-0.064,0.4-0.121,0.506-0.17L14.271,18.307z M14.137,7.429c-0.353,0.328-0.778,0.492-1.275,0.492c-0.496,0-0.924-0.164-1.28-0.492c-0.354-0.328-0.533-0.727-0.533-1.193 c0-0.465,0.18-0.865,0.533-1.196c0.356-0.332,0.784-0.497,1.28-0.497c0.497,0,0.923,0.165,1.275,0.497 c0.353,0.331,0.53,0.731,0.53,1.196C14.667,6.703,14.49,7.101,14.137,7.429z"
+                />
+              </g>
+            </svg>
+            <span translate="navigation.ABOUT"
+              class="capital-first">Om oss</span>
+          </a>
+          <div class="sub-nav">
+            <ul class="sub-nav-group">
+              <li>
+                <a href="/styret">
+                  <span class="capital-first"
+                    translate="navigation.COUNCIL">Styret</span><span class="sr-only">, Fjell-Kameraterne</span>
+                </a>
+              </li>
+              <li>
+                <a href="/historie">
+                  <span class="capital-first"
+                    translate="navigation.HISTORY">Historie</span><span class="sr-only">, Fjell-Kameraterne</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- Contact -->
+        <li class="nav-item">
+          <a href="#">
+            <svg class="nav-icon"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 612 612"
+              style="enable-background: new 0 0 612 612;"
+              xml:space="preserve">
+              <g>
+                <g>
+                  <path d="M503.676,349.452c0-5.712-2.244-9.792-6.729-12.24l-66.708-31.824 c7.752-4.896,13.974-11.832,18.666-20.808c4.689-8.976,7.038-19.176,7.038-30.6c0-15.912-4.794-29.58-14.385-41.004 c-9.588-11.424-21.315-17.136-35.188-17.136c-4.896,0-9.486,0.816-13.771,2.448c-4.281,1.632-8.262,3.672-11.934,6.12 c4.488,12.24,6.732,24.684,6.732,37.332c0,19.992-5.307,38.148-15.912,54.468c2.04,2.04,3.978,3.876,5.812,5.508 c1.836,1.632,3.774,3.06,5.814,4.284l43.452,20.196c6.117,3.264,11.016,7.854,14.688,13.77s5.508,12.546,5.508,19.893v56.303h45.9 c3.264,0,5.916-1.326,7.956-3.979c2.04-2.649,3.06-5.812,3.06-9.483L503.676,349.452L503.676,349.452z M425.952,359.856 c0-7.347-2.856-12.24-8.568-14.688l-58.14-28.152l-24.48-11.625c5.307-3.264,10.101-7.446,14.385-12.546 c4.281-5.1,7.854-10.914,10.71-17.442c2.039-4.896,3.771-10.2,5.199-15.912c1.431-5.712,2.145-11.628,2.145-17.748 c0-3.264-0.204-6.426-0.612-9.486s-1.02-6.222-1.836-9.486c-3.672-15.504-10.914-28.152-21.726-37.944 c-10.813-9.792-23.358-14.688-37.638-14.688s-26.724,4.794-37.332,14.382s-17.748,21.726-21.42,36.414 c-2.04,7.344-3.06,14.28-3.06,20.808c0,12.24,2.652,24.072,7.956,35.496c6.12,12.24,14.484,21.828,25.092,28.764l-23.256,11.016 l-59.976,27.54c-6.12,2.856-9.18,7.956-9.18,15.302v56.303v9.792c0,4.488,1.326,8.262,3.978,11.322s6.018,4.59,10.098,4.59h214.2 c3.672,0,6.834-1.53,9.483-4.59c2.652-3.063,3.979-6.834,3.979-11.322v-9.792L425.952,359.856L425.952,359.856z M164.016,359.856 c0-7.347,1.836-13.977,5.508-19.893s8.568-10.506,14.688-13.77l45.288-20.809c4.08-2.448,7.344-5.304,9.792-8.568 c-5.304-7.752-9.384-16.32-12.24-25.704s-4.284-19.176-4.284-29.376c0-6.936,0.714-13.566,2.142-19.89 c1.428-6.324,3.162-12.342,5.202-18.054c-7.344-5.304-15.504-7.956-24.48-7.956c-13.872,0-25.602,5.712-35.19,17.136 c-9.588,11.424-14.382,25.092-14.382,41.004c0,11.424,2.448,21.726,7.344,30.906s11.424,16.218,19.584,21.114l-67.932,31.212 c-4.488,2.04-6.732,6.12-6.732,12.24v53.244c0,3.672,1.02,6.834,3.06,9.483c2.04,2.652,4.692,3.979,7.956,3.979h44.676 L164.016,359.856L164.016,359.856z M306,0c42.024,0,81.702,8.058,119.034,24.174s69.768,37.944,97.308,65.484 s49.368,59.976,65.484,97.308S612,263.976,612,306c0,28.152-3.672,55.284-11.016,81.396 c-7.347,26.109-17.646,50.487-30.906,73.134c-13.26,22.644-29.172,43.248-47.736,61.812 c-18.562,18.564-39.168,34.479-61.812,47.736c-22.646,13.26-47.022,23.562-73.136,30.906C361.284,608.328,334.152,612,306,612 s-55.284-3.672-81.396-11.016c-26.112-7.347-50.49-17.646-73.134-30.906s-43.248-29.172-61.812-47.736 c-18.564-18.562-34.476-39.168-47.736-61.812c-13.26-22.646-23.562-47.022-30.906-73.135C3.672,361.284,0,334.152,0,306 s3.672-55.284,11.016-81.396s17.646-50.49,30.906-73.134s29.172-43.248,47.736-61.812s39.168-34.476,61.812-47.736 s47.022-23.562,73.134-30.906S277.848,0,306,0z"
+                  />
+                </g>
+              </g>
+            </svg>
+            <span translate="navigation.CONTACT"
+              class="capital-first">Kontakt</span>
+          </a>
+          <div class="sub-nav">
+            <ul class="sub-nav-group">
+              <li>
+                <a href="/bordtennis/kontakt">
+                  <span class="capital-first sr-only"
+                    translate="CONTACT">Kontakt</span><span class="sr-only">,</span> <span class="capital-first"
+                    translate="TABLE_TENNIS">Bordtennis</span>
+                </a>
+              </li>
+              <li>
+                <a href="/innebandy/kontakt">
+                  <span class="capital-first sr-only"
+                    translate="CONTACT">Kontakt</span><span class="sr-only">,</span> <span class="capital-first"
+                    translate="BANDY">Innebandy</span>
+                </a>
+              </li>
+              <li>
+                <a href="/fotball/kontakt">
+                  <span class="capital-first sr-only"
+                    translate="CONTACT">Kontakt</span><span class="sr-only">,</span> <span class="capital-first"
+                    translate="FOOTBALL">Fotball</span>
+                </a>
+              </li>
+              <li>
+                <a href="/eldres/kontakt">
+                  <span class="capital-first sr-only"
+                    translate="CONTACT">Kontakt</span><span class="sr-only">,</span> <span class="capital-first"
+                    translate="SENIOR">Eldres</span>
+                </a>
+              </li>
+              <li>
+                <a href="/eldres/kontakt">
+                  <span class="capital-first sr-only"
+                    translate="CONTACT">Kontakt</span><span class="sr-only">,</span> <span class="capital-first"
+                    translate="CABINS">Hytter</span>
+                </a>
+              </li>
+              <li>
+                <a href="/blimedlem">
+                  <span class="capital-first"
+                    translate="JOIN_US">Bli medlem</span>
+                </a>
+              </li>
+              <li>
+                <a href="/bidra">
+                  <span class="capital-first"
+                    translate="CONTRIBUTE">Bidra</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </nav>
+
+
+    <aside class="js-side-nav side-nav">
+      <nav class="js-side-nav-container side-nav__container">
+        <button class="js-menu-hide side-nav__hide fa fa-times"></button>
+        <header class="side-nav__header">
+          Fjell-Kameraterne
+        </header>
+        <ul class="side-nav__content">
+          <!-- Home -->
+          <li class="js-no-children side-nav__no-children">
+            <a href="/"
+              translate="navigation.HOME">Hjem</a>
+          </li>
+
+          <!-- Table tennis -->
+          <li class="js-has-children side-nav__parent side-nav__parent--collapsed"
+            aria-expanded="false">
+            <button>
+              <span translate="navigation.TABLE_TENNIS"
+                class="capital-first">Bordtennis</span>
+              <span class="sr-only"> - </span>
+              <span class="sr-only capital-first"
+                translate="PRESS_ENTER_TO_CYCLE_THROUGH_SUB_CATEGORIES">Trykk enter-knappen for å bla gjennom underkategorier</span>
+            </button>
+            <ul>
+              <li class="side-nav__child">
+                <a href="/">
+                  <span class="capital-first"
+                    translate="navigation.INFORMATION">Informasjon</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="TABLE_TENNIS">bordtennis</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/bordtennis">
+                  <span class="capital-first"
+                    translate="navigation.NEWS">Nyheter</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="TABLE_TENNIS">bordtennis</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/bordtennis/treningstider">
+                  <span class="capital-first"
+                    translate="navigation.TRANING_HOURS">Treningstider</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="TABLE_TENNIS">bordtennis</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/bordtennis/kalender">
+                  <span class="capital-first"
+                    translate="navigation.CALENDAR">Kalender</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="TABLE_TENNIS">bordtennis</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/bordtennis/styret">
+                  <span class="capital-first"
+                    translate="navigation.COUNCIL">Styret</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="TABLE_TENNIS">bordtennis</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/bordtennis/historie"><span class="capital-first" translate="navigation.HISTORY">Historie</span><span class="sr-only">,</span> <span class="sr-only" translate="TABLE_TENNIS">bordtennis</span>
+              </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Bandy -->
+          <li class="js-has-children side-nav__parent side-nav__parent--collapsed"
+            aria-expanded="false">
+            <button>
+              <span translate="navigation.BANDY"
+                class="capital-first">Innebandy</span>
+              <span class="sr-only"> - </span>
+              <span class="sr-only capital-first"
+                translate="PRESS_ENTER_TO_CYCLE_THROUGH_SUB_CATEGORIES">Trykk enter-knappen for å bla gjennom underkategorier</span>
+            </button>
+            <ul>
+              <li class="side-nav__child">
+                <a href="/innebandy/info">
+                  <span class="capital-first"
+                    translate="navigation.INFORMATION">Informasjon</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="BANDY">innebandy</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/innebandy">
+                  <span class="capital-first"
+                    translate="navigation.NEWS">Nyheter</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="BANDY">innebandy</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/innebandy/treningstider">
+                  <span class="capital-first"
+                    translate="navigation.TRANING_HOURS">Treningstider</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="BANDY">innebandy</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/innebandy/kalender">
+                  <span class="capital-first"
+                    translate="navigation.CALENDAR">Kalender</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="BANDY">innebandy</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/innebandy/styret">
+                  <span class="capital-first"
+                    translate="navigation.COUNCIL">Styret</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="BANDY">innebandy</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/innebandy/historie"><span class="capital-first" translate="navigation.HISTORY">Historie</span><span class="sr-only">,</span> <span class="sr-only" translate="BANDY">innebandy</span>
+              </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Football -->
+          <li class="js-has-children side-nav__parent side-nav__parent--collapsed"
+            aria-expanded="false">
+            <button>
+              <span translate="navigation.FOOTBALL"
+                class="capital-first">Fotball</span>
+              <span class="sr-only"> - </span>
+              <span class="sr-only capital-first"
+                translate="PRESS_ENTER_TO_CYCLE_THROUGH_SUB_CATEGORIES">Trykk enter-knappen for å bla gjennom underkategorier</span>
+            </button>
+            <ul>
+              <li class="side-nav__child">
+                <a href="/fotball/info">
+                  <span class="capital-first"
+                    translate="navigation.INFORMATION">Informasjon</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="FOOTBALL">fotball</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/fotball">
+                  <span class="capital-first"
+                    translate="navigation.NEWS">Nyheter</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="FOOTBALL">fotball</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/fotball/treningstider">
+                  <span class="capital-first"
+                    translate="navigation.TRANING_HOURS">Treningstider</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="FOOTBALL">fotball</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/fotball/kalender">
+                  <span class="capital-first"
+                    translate="navigation.CALENDAR">Kalender</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="FOOTBALL">fotball</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/fotball/styret">
+                  <span class="capital-first"
+                    translate="navigation.COUNCIL">Styret</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="FOOTBALL">fotball</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/fotball/historie"><span class="capital-first" translate="navigation.HISTORY">Historie</span><span class="sr-only">,</span> <span class="sr-only" translate="FOOTBALL">fotball</span>
+              </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Senior -->
+          <li class="js-has-children side-nav__parent side-nav__parent--collapsed"
+            aria-expanded="false">
+            <button>
+              <span translate="navigation.SENIOR"
+                class="capital-first">Eldres</span>
+              <span class="sr-only"> - </span>
+              <span class="sr-only capital-first"
+                translate="PRESS_ENTER_TO_CYCLE_THROUGH_SUB_CATEGORIES">Trykk enter-knappen for å bla gjennom underkategorier</span>
+            </button>
+            <ul>
+              <li class="side-nav__child">
+                <a href="/eldres/info">
+                  <span class="capital-first"
+                    translate="navigation.INFORMATION">Informasjon</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="SENIOR">eldres</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/eldres">
+                  <span class="capital-first"
+                    translate="navigation.NEWS">Nyheter</span> <span class="sr-only"
+                    translate="ABOUT">om</span> <span class="sr-only"
+                    translate="SENIOR">eldres</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/eldres/treningstider">
+                  <span class="capital-first"
+                    translate="navigation.TRANING_HOURS">Treningstider</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="SENIOR">eldres</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/eldres/kalender">
+                  <span class="capital-first"
+                    translate="navigation.CALENDAR">Kalender</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="SENIOR">eldres</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/eldres/styret">
+                  <span class="capital-first"
+                    translate="navigation.COUNCIL">Styret</span><span class="sr-only">,</span> <span class="sr-only"
+                    translate="SENIOR">eldres</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/eldres/historie"><span class="capital-first" translate="navigation.HISTORY">Historie</span><span class="sr-only">,</span> <span class="sr-only" translate="SENIOR">eldres</span>
+              </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Cabins -->
+          <li class="js-has-children side-nav__parent side-nav__parent--collapsed"
+            aria-expanded="false">
+            <button>
+              <span translate="navigation.CABINS"
+                class="capital-first">Hytter</span>
+              <span class="sr-only"> - </span>
+              <span class="sr-only capital-first"
+                translate="PRESS_ENTER_TO_CYCLE_THROUGH_SUB_CATEGORIES">Trykk enter-knappen for å bla gjennom underkategorier</span>
+            </button>
+            <ul>
+              <li class="side-nav__child">
+                <a href="/hytter/fjelltun">
+                  <span class="capital-first"
+                    translate="navigation.FJELLTUN_CABIN">Fjelltun-hytten</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/hytter/byfjellet">
+                  <span class="capital-first"
+                    translate="navigation.BYFJELLET_CABIN">Byfjellet-hytten</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/hytter/booking">
+                  <span class="capital-first"
+                    translate="navigation.BOOK_CABINS">Lei hytter</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- About -->
+          <li class="js-has-children side-nav__parent side-nav__parent--collapsed"
+            aria-expanded="false">
+            <button>
+              <span translate="navigation.ABOUT"
+                class="capital-first">Om oss</span>
+              <span class="sr-only"> - </span>
+              <span class="sr-only capital-first"
+                translate="PRESS_ENTER_TO_CYCLE_THROUGH_SUB_CATEGORIES">Trykk enter-knappen for å bla gjennom underkategorier</span>
+            </button>
+            <ul>
+              <li class="side-nav__child">
+                <a href="/styret">
+                  <span class="capital-first"
+                    translate="navigation.COUNCIL">Styret</span><span class="sr-only">, Fjell-Kameraterne</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/historie">
+                  <span class="capital-first"
+                    translate="navigation.HISTORY">Historie</span><span class="sr-only">, Fjell-Kameraterne</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Contact -->
+          <li class="js-has-children side-nav__parent side-nav__parent--collapsed"
+            aria-expanded="false">
+            <button>
+              <span translate="navigation.CONTACT"
+                class="capital-first">Kontakt</span>
+              <span class="sr-only"> - </span>
+              <span class="sr-only capital-first"
+                translate="PRESS_ENTER_TO_CYCLE_THROUGH_SUB_CATEGORIES">Trykk enter-knappen for å bla gjennom underkategorier</span>
+            </button>
+            <ul>
+              <li class="side-nav__child">
+                <a href="/bordtennis/kontakt">
+                  <span class="capital-first sr-only"
+                    translate="CONTACT">Kontakt</span><span class="sr-only">,</span> <span class="capital-first"
+                    translate="TABLE_TENNIS">Bordtennis</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/innebandy/kontakt">
+                  <span class="capital-first sr-only"
+                    translate="CONTACT">Kontakt</span><span class="sr-only">,</span> <span class="capital-first"
+                    translate="BANDY">Innebandy</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/fotball/kontakt">
+                  <span class="capital-first sr-only"
+                    translate="CONTACT">Kontakt</span><span class="sr-only">,</span> <span class="capital-first"
+                    translate="FOOTBALL">Fotball</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/eldres/kontakt">
+                  <span class="capital-first sr-only"
+                    translate="CONTACT">Kontakt</span><span class="sr-only">,</span> <span class="capital-first"
+                    translate="SENIOR">Eldres</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/eldres/kontakt">
+                  <span class="capital-first sr-only"
+                    translate="CONTACT">Kontakt</span><span class="sr-only">,</span> <span class="capital-first"
+                    translate="CABINS">Hytter</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/blimedlem">
+                  <span class="capital-first"
+                    translate="JOIN_US">Bli medlem</span>
+                </a>
+              </li>
+              <li class="side-nav__child">
+                <a href="/bidra">
+                  <span class="capital-first"
+                    translate="CONTRIBUTE">Bidra</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div id="content"
+      tabindex="-1"></div>
+  </div>
+  <script type="text/javascript"
+    src="/static/dist/fjellkam.js"
+    charset="utf-8"></script>
+
+  <script type="text/javascript"
+    defer>
+    $(document).ready(function() {
+
+      $("#dawgdrops").accessibleMegaMenu({
+        /* prefix for generated unique id attributes, which are required
+           to indicate aria-owns, aria-controls and aria-labelledby */
+        uuidPrefix: "accessible-megamenu",
+
+        /* css class used to define the megamenu styling */
+        menuClass: "nav-menu",
+
+        /* css class for a top-level navigation item in the megamenu */
+        topNavItemClass: "nav-item",
+
+        /* css class for a megamenu panel */
+        panelClass: "sub-nav",
+
+        /* css class for a group of items within a megamenu panel */
+        panelGroupClass: "sub-nav-group",
+
+        /* css class for the hover state */
+        hoverClass: "hover",
+
+        /* css class for the focus state */
+        focusClass: "focus",
+
+        /* css class for the open state */
+        openClass: "open"
+      });
+
+      var parents = document.querySelectorAll('.side-nav__parent');
+      var noChildren = document.querySelectorAll('.js-no-children');
+
+      // Slight hack to check if openELement is object
+      var openElement = '';
+
+      Array.prototype.forEach.call(parents, function(parent) {
+        parent.addEventListener('click', toggleOnClick.bind(null, parent));
+
+        Array.prototype.forEach.call(parent.querySelectorAll('.side-nav__child'), function(child) {
+          child.addEventListener('click', sideNav.hideSideNav);
+        });
+      });
+
+      Array.prototype.forEach.call(noChildren, function(element) {
+        element.addEventListener('click', sideNav.hideSideNav);
+      });
+
+
+
+      function toggleOnClick(element, event) {
+        if (openElement !== element && typeof openElement === 'object') {
+          openElement.classList.add('side-nav__parent--collapsed');
+          openElement.classList.remove('side-nav__parent--open');
+          openElement.setAttribute('aria-expanded', false);
+        }
+
+        element.classList.toggle('side-nav__parent--collapsed');
+        element.classList.toggle('side-nav__parent--open');
+
+        var isExpanded = element.getAttribute('aria-expanded') == 'true' ? true : false;
+        element.setAttribute('aria-expanded', !isExpanded);
+
+        openElement = element;
+      }
+
+    });
+
+  </script>
+</body>
+
+</html>

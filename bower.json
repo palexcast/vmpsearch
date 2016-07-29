@@ -1,0 +1,23 @@
+{
+  "name": "vmpsearch",
+  "description": "Search app for Vinmonopolet",
+  "main": "index.js",
+  "authors": [
+    "Alexander Castillo"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "alcohol",
+    "vinmonopolet",
+    "drinks",
+    "price"
+  ],
+  "homepage": "https://github.com/patidati/vmpsearch",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

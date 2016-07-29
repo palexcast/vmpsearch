@@ -1,0 +1,29 @@
+{
+  "name": "vmpsearch",
+  "version": "1.0.0",
+  "description": "Search app for Vinmonopolet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patidati/vmpsearch.git"
+  },
+  "keywords": [
+    "alcohol",
+    "vinmonopolet",
+    "drinks",
+    "price"
+  ],
+  "author": "Alexander Castillo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patidati/vmpsearch/issues"
+  },
+  "homepage": "https://github.com/patidati/vmpsearch#readme",
+  "devDependencies": {
+    "bower": "^1.7.9",
+    "gulp": "^3.9.1"
+  }
+}
